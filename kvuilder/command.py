@@ -39,6 +39,22 @@ def create_project(name, curdir):
     with open(main_py, "w") as fp:
         fp.write(main_data)
 
+    service_main_py = os.path.join(project_dir, 'service', "main.py")
+    with open(service_main_py) as fp:
+        service_main_t = string.Template(fp.read())
+        service_main_data = service_main_t.safe_substitute(nama_program=name.capitalize())
+
+    with open(service_main_py, "w") as fp:
+        fp.write(service_main_data)
+
+    controller_py = os.path.join(project_dir, 'libs', 'core', 'controller', "controller.py")
+    with open(controller_py) as fp:
+        controller_t = string.Template(fp.read())
+        controller_data = controller_t.safe_substitute(nama_program=name.capitalize())
+
+    with open(controller_py, "w") as fp:
+        fp.write(controller_data)
+
     program_py = os.path.join(project_dir, "program.py")
     os.rename(program_py, os.path.join(project_dir, name + ".py"))
 
@@ -52,6 +68,14 @@ def create_project(name, curdir):
 
     os.rename(pyi_file, os.path.join(project_dir, name + ".spec"))
     click.echo("Project %r berhasil dibuat!" % name)
+
+    buildozer_file = os.path.join(project_dir, "buildozer.spec")
+    with open(pyi_file) as fp:
+        buildozer_tmp = string.Template(fp.read())
+        buildozer = buildozer_tmp.safe_substitute(nama_program=name, nama_program_cap=name.capitalize())
+
+    with open(buildozer_file, "w") as fp:
+        fp.write(buildozer)
 
 
 @project_group.group("screen")

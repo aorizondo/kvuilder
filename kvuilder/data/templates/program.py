@@ -10,11 +10,13 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 
 from libs.components import messagebox
+from libs.core.controller import Controller
 
 
 class MainApp(MDApp):
     def __init__(self, **kwds):
         super().__init__(**kwds)
+        self.ctrl = Controller(self)
         Window.bind(
             on_request_close=self.on_request_close,
             on_keyboard=self.on_keyboard
@@ -131,3 +133,38 @@ class MainApp(MDApp):
     def on_request_close(self, *args):
         Clock.schedule_once(lambda x: self.dialog_exit.open(), 0)
         return True
+
+    def build_config(self, config):
+        """
+
+        :param config:
+        :type config: kivy.config.ConfigParser
+        :return:
+        :rtype:
+        """
+
+    def build_settings(self, settings):
+        """
+        Add our custom section to the default configuration object.
+        """
+
+    def on_config_change(self, config, section, key, value):
+        """
+        Respond to changes in the configuration.
+        """
+
+    def on_start(self):
+        self.ctrl.service_connect()
+
+    def on_resume(self):
+        self.ctrl.service_connect()
+
+    def on_pause(self):
+        self.ctrl.service_disconnect()
+        return True
+
+    def on_exit(self):
+        self.ctrl.service_disconnect()
+
+    def on_stop(self):
+        self.ctrl.service_disconnect()
